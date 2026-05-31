@@ -312,7 +312,7 @@ export default function DownloadReport({
               color:#000;
               margin-bottom:8px;
             ">
-              AI DETECTION HEATMAP
+               DETECTION HEATMAP
             </div>
 
             <img
@@ -427,7 +427,7 @@ export default function DownloadReport({
 
         return new Promise((resolve) => {
 
-          if (img.complete) {
+          if (img.complete && img.naturalHeight !== 0) {
 
             resolve();
 
@@ -444,6 +444,7 @@ export default function DownloadReport({
     // =====================================================
     // HTML TO CANVAS
     // =====================================================
+    await new Promise(r => setTimeout(r, 500));
     const canvas =
       await html2canvas(container, {
 

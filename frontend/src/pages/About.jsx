@@ -4,10 +4,10 @@ import Footer from "../components/Footer";
 
 export default function About() {
   const members = [
-    { name: "Diya Ghosh", role: "Fullstack Developer", info: "Connected frontend and backend, handled routing, and ensured smooth user experience." },
-    { name: "Madhurya Naha", role: "Frontend & UI Designer", info: "Focused on designing responsive layouts and integrating Tailwind CSS with React." },
-    { name: "Aishee Bhattacharjee", role: "Backend & AI Integration", info: "Implemented AI models, API endpoints, and managed the database and server logic." },
-    { name: "Subhajit Basak", role: "Data & Model Specialist", info: "Worked on AI model training, dataset preparation, and accuracy optimization for detection algorithms." },
+    { name: "Diya Ghosh"/*, role: "Fullstack Developer", info: "Connected frontend and backend, handled routing, and ensured smooth user experience."*/ },
+    { name: "Madhurya Naha"/*, role: "Frontend & UI Designer", info: "Focused on designing responsive layouts and integrating Tailwind CSS with React."*/ },
+    { name: "Aishee Bhattacharjee"/*, role: "Backend & AI Integration", info: "Implemented AI models, API endpoints, and managed the database and server logic."*/ },
+    { name: "Subhajit Basak"/*, role: "Data & Model Specialist", info: "Worked on AI model training, dataset preparation, and accuracy optimization for detection algorithms."*/},
   ];
 
   return (
@@ -40,6 +40,8 @@ export default function About() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
+        <br></br>
+        <br></br>
           Team Members
         </motion.h2>
 
@@ -53,8 +55,8 @@ export default function About() {
               transition={{ delay: 0.6 + i * 0.2, duration: 0.8 }}
             >
               <h3 className="text-lg font-semibold mb-1">{m.name}</h3>
-              <p className="text-indigo-600 dark:text-indigo-400 mb-2">{m.role}</p>
-              <p className="text-gray-700 dark:text-gray-200 text-sm">{m.info}</p>
+              {/* <p className="text-indigo-600 dark:text-indigo-400 mb-2">{m.role}</p> */}
+              {/* <p className="text-gray-700 dark:text-gray-200 text-sm">{m.info}</p> */}
             </motion.div>
           ))}
         </div>

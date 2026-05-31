@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import Button from "../components/Button";
-import Container from "../components/Container";
-import ConfidenceBar from "../components/ConfidenceBar";
-import RiskBadge from "../components/RiskBadge";
 import AnalysisSteps from "../components/AnalysisSteps";
+import Button from "../components/Button";
+import ConfidenceBar from "../components/ConfidenceBar";
+import Container from "../components/Container";
 import Disclaimer from "../components/Disclaimer";
-import Footer from "../components/Footer";
 import DownloadReport from "../components/DownloadReport";
-import HowItWorks from "../components/HowItWorks";
+import Footer from "../components/Footer";
 import HeatmapPreview from "../components/HeatmapPreview";
+import HowItWorks from "../components/HowItWorks";
+import RiskBadge from "../components/RiskBadge";
 export default function Result() {
 
   const navigate = useNavigate();
@@ -34,28 +34,7 @@ export default function Result() {
   // -------------------------
   // NORMALIZE SCORES
   // -------------------------
-  const normalize = (data) => {
-
-    const total =
-      data.real +
-      data.ai +
-      data.morphed || 1;
-
-    return {
-
-      real:
-        (data.real / total) * 100,
-
-      ai:
-        (data.ai / total) * 100,
-
-      morphed:
-        (data.morphed / total) * 100
-    };
-  };
-
-  const normalizedResult = normalize(result);
-
+  
   // -------------------------
   // FINAL LABEL
   // -------------------------
@@ -119,35 +98,35 @@ export default function Result() {
               />
 
               {/* CONFIDENCE */}
-              <div className="text-center">
+              {/* CONFIDENCE */}
+<div className="text-center">
 
-                <p className="text-lg font-medium">
-                  Confidence:{" "}
+  <p className="text-lg font-medium">
+    Confidence:{" "}
 
-                  <span className="font-bold">
-                    {result.confidence}%
-                  </span>
+    <span className="font-bold">
+      {result.confidence.toFixed(1)}%
+    </span>
 
-                </p>
+  </p>
 
-              </div>
+</div>
 
               {/* CONFIDENCE BARS */}
               <ConfidenceBar
-                label="Real"
-                value={normalizedResult.real.toFixed(1)}
-              />
+  label="Real"
+  value={result.real.toFixed(1)}
+/>
 
               <ConfidenceBar
-                label="AI Generated"
-                value={normalizedResult.ai.toFixed(1)}
-              />
+  label="AI Generated"
+  value={result.ai.toFixed(1)}
+/>
 
               <ConfidenceBar
-                label="Morphed"
-                value={normalizedResult.morphed.toFixed(1)}
-              />
-
+  label="Morphed"
+  value={result.morphed.toFixed(1)}
+/>
               {/* DOWNLOAD REPORT */}
               <DownloadReport
                 image={image}
