@@ -700,13 +700,25 @@ def predict():
         # =====================================================
         # STAGE 2
         # =====================================================
-        img_stage2 = preprocess_stage2(
-            file_path
-        )
+        print("5. Starting Stage 2 preprocessing", flush=True)
 
-        stage2_prediction = get_stage2().predict(
+        img_stage2 = preprocess_stage2(file_path)
+
+        print("6. Stage 2 preprocessing complete", flush=True)
+
+        print("7. Loading Stage 2 model", flush=True)
+
+        model2 = get_stage2()
+
+        print("8. Stage 2 model loaded", flush=True)
+
+        print("9. Running Stage 2 prediction", flush=True)
+
+        stage2_prediction = model2.predict(
             img_stage2
         )[0]
+
+        print("10. Stage 2 prediction complete", flush=True)
 
         ai_score = float(
             stage2_prediction[0] * 100
@@ -728,6 +740,7 @@ def predict():
         # =====================================================
         # GENERATE HEATMAP
         # =====================================================
+
         heatmap_filename = (
             f"heatmap_{file.filename}"
         )
@@ -737,16 +750,19 @@ def predict():
             heatmap_filename
         )
 
+        print("11. Starting Stage 2 GradCAM", flush=True)
+
         generate_gradcam(
-            get_stage2(),
+            model2,
             img_stage2,
             file_path,
             heatmap_path
         )
 
-        # =====================================================
-        # RESPONSE
-        # =====================================================
+        print("12. Stage 2 GradCAM complete", flush=True)
+
+        print("13. Returning JSON response", flush=True)
+
         return jsonify({
 
             "real": round(real_score, 2),
