@@ -260,9 +260,7 @@ CORS(app)
 # =====================================================
 # LOAD MODELS
 # =====================================================
-stage1_model = load_model(
-    "models/stage1_real_fake.keras"
-)
+stage1_model = load_model("models/stage1_real_fake.keras", compile=False)
 
 stage2_model = load_model(
     "models/stage2_ai_morphed.keras"
