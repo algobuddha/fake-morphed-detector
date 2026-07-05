@@ -77,7 +77,7 @@ export default function DownloadReport({
       } else {
 
         heatmapUrl =
-          `http://127.0.0.1:5000${prediction.heatmap}`;
+          `https://fake-morphed-detector-2.onrender.com${prediction.heatmap}`;
       }
     }
 

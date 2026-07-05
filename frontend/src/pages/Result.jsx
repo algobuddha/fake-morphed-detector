@@ -78,7 +78,7 @@ export default function Result() {
   imageUrl={image}
   heatmapUrl={
     result.heatmap
-      ? `http://127.0.0.1:5000${result.heatmap}`
+      ? `https://fake-morphed-detector-2.onrender.com${result.heatmap}`
       : null
   }
 />
