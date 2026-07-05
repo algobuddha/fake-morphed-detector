@@ -367,7 +367,7 @@ def preprocess_stage2(path):
 
     print("P3. MTCNN loaded", flush=True)
 
-    faces = []
+    faces = detector.detect_faces(img)
 
     print("P4. Face detection complete", flush=True)
 
@@ -764,16 +764,16 @@ def predict():
             heatmap_filename
         )
 
-        print("11. Starting Stage 2 GradCAM", flush=True)
+        print("11. Skipping Stage 2 GradCAM", flush=True)
 
-        generate_gradcam(
-            model2,
-            img_stage2,
-            file_path,
-            heatmap_path
-        )
-
-        print("12. Stage 2 GradCAM complete", flush=True)
+        return jsonify({
+            "real": round(real_score, 2),
+            "ai": round(ai_score, 2),
+            "morphed": round(morphed_score, 2),
+            "finalLabel": final_label,
+            "confidence": round(final_confidence, 2),
+            "heatmap": ""
+        })
 
         print("13. Returning JSON response", flush=True)
 
