@@ -397,119 +397,125 @@ def generate_gradcam(
     original_path,
     output_path
 ):
+    print("Starting GradCAM...", flush=True)
 
-    # LAST CONVOLUTION LAYER
-    last_conv_layer_name = "Conv_1"
+    try:
+        # LAST CONVOLUTION LAYER
+        last_conv_layer_name = "Conv_1"
 
-    base_model = model.layers[0]
+        base_model = model.layers[0]
 
-    classifier_input = tf.keras.Input(
-        shape=(7, 7, 1280)
-    )
-
-    x = classifier_input
-
-    for layer in model.layers[1:]:
-
-        x = layer(x)
-
-    classifier_model = Model(
-        classifier_input,
-        x
-    )
-
-    last_conv_layer = base_model.get_layer(
-        last_conv_layer_name
-    )
-
-    grad_model = Model(
-        inputs=base_model.input,
-        outputs=last_conv_layer.output
-    )
-
-    with tf.GradientTape() as tape:
-
-        conv_outputs = grad_model(
-            img_array
+        classifier_input = tf.keras.Input(
+            shape=(7, 7, 1280)
         )
 
-        tape.watch(conv_outputs)
+        x = classifier_input
 
-        predictions = classifier_model(
+        for layer in model.layers[1:]:
+            x = layer(x)
+
+        classifier_model = Model(
+            classifier_input,
+            x
+        )
+
+        last_conv_layer = base_model.get_layer(
+            last_conv_layer_name
+        )
+
+        grad_model = Model(
+            inputs=base_model.input,
+            outputs=last_conv_layer.output
+        )
+
+        print("Grad model created", flush=True)
+
+        with tf.GradientTape() as tape:
+
+            conv_outputs = grad_model(img_array)
+
+            tape.watch(conv_outputs)
+
+            predictions = classifier_model(conv_outputs)
+
+            class_idx = tf.argmax(predictions[0])
+
+            loss = predictions[:, class_idx]
+
+        print("GradientTape complete", flush=True)
+
+        grads = tape.gradient(
+            loss,
             conv_outputs
         )
 
-        class_idx = tf.argmax(
-            predictions[0]
+        pooled_grads = tf.reduce_mean(
+            grads,
+            axis=(0, 1, 2)
         )
 
-        loss = predictions[:, class_idx]
+        conv_outputs = conv_outputs[0]
 
-    grads = tape.gradient(
-        loss,
-        conv_outputs
-    )
+        heatmap = conv_outputs @ pooled_grads[..., tf.newaxis]
 
-    pooled_grads = tf.reduce_mean(
-        grads,
-        axis=(0,1,2)
-    )
+        heatmap = tf.squeeze(heatmap)
 
-    conv_outputs = conv_outputs[0]
+        heatmap = np.maximum(heatmap, 0)
 
-    heatmap = conv_outputs @ pooled_grads[..., tf.newaxis]
+        max_val = np.max(heatmap)
 
-    heatmap = tf.squeeze(
-        heatmap
-    )
+        if max_val > 0:
+            heatmap = heatmap / max_val
+        else:
+            heatmap = np.zeros_like(heatmap)
 
-    heatmap = np.maximum(
-        heatmap,
-        0
-    )
+        print("Heatmap normalized", flush=True)
 
-    heatmap = heatmap / np.max(
-        heatmap
-    )
+        original_img = cv2.imread(original_path)
 
-    original_img = cv2.imread(
-        original_path
-    )
+        if original_img is None:
+            raise ValueError("Failed to read original image.")
 
-    original_img = cv2.resize(
-        original_img,
-        (224,224)
-    )
-
-    heatmap = cv2.resize(
-        heatmap,
-        (
-            original_img.shape[1],
-            original_img.shape[0]
+        original_img = cv2.resize(
+            original_img,
+            (224, 224)
         )
-    )
 
-    heatmap = np.uint8(
-        255 * heatmap
-    )
+        heatmap = cv2.resize(
+            heatmap,
+            (
+                original_img.shape[1],
+                original_img.shape[0]
+            )
+        )
 
-    heatmap = cv2.applyColorMap(
-        heatmap,
-        cv2.COLORMAP_JET
-    )
+        heatmap = np.uint8(255 * heatmap)
 
-    superimposed_img = cv2.addWeighted(
-        original_img,
-        0.6,
-        heatmap,
-        0.4,
-        0
-    )
+        heatmap = cv2.applyColorMap(
+            heatmap,
+            cv2.COLORMAP_JET
+        )
 
-    cv2.imwrite(
-        output_path,
-        superimposed_img
-    )
+        superimposed_img = cv2.addWeighted(
+            original_img,
+            0.6,
+            heatmap,
+            0.4,
+            0
+        )
+
+        cv2.imwrite(
+            output_path,
+            superimposed_img
+        )
+
+        print("GradCAM saved successfully", flush=True)
+
+    except Exception:
+        import traceback
+        print("GradCAM crashed!", flush=True)
+        traceback.print_exc()
+        raise
 
 # =====================================================
 # HOME
@@ -539,7 +545,7 @@ def predict():
     file_path = None
 
     try:
-        print("1. Predict request received")
+        print("1. Predict request received", flush=True)
           # DELETE OLD HEATMAPS
         for old_file in os.listdir(HEATMAP_FOLDER):
 
@@ -556,6 +562,7 @@ def predict():
         # =====================================================
         if "image" not in request.files:
 
+            print("Returning JSON response", flush=True)
             return jsonify({
                 "error": "No image uploaded"
             }), 400
@@ -571,7 +578,7 @@ def predict():
         )
 
         file.save(file_path)
-        print("2. Image saved")
+        print("2. Image saved", flush=True)
 
         # =====================================================
         # STAGE 1
@@ -584,6 +591,8 @@ def predict():
             img_stage1
         )[0]
 
+        print("3. Stage 1 prediction complete", flush=True)
+
         fake_score = float(
             stage1_prediction[0] * 100
         )
@@ -591,6 +600,8 @@ def predict():
         real_score = float(
             stage1_prediction[1] * 100
         )
+
+        print(f"4. Scores -> Fake={fake_score:.2f}, Real={real_score:.2f}", flush=True)
 
         # =====================================================
         # REAL IMAGE
