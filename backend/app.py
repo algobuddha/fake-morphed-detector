@@ -280,8 +280,6 @@ def get_stage2():
             compile=False
         )
     return stage2_model
-stage1_model = get_stage1()
-stage2_model = get_stage2()
 # =====================================================
 # FACE DETECTOR
 # =====================================================
@@ -538,7 +536,10 @@ def serve_heatmap(filename):
 @app.route("/predict", methods=["POST"])
 def predict():
 
+    file_path = None
+
     try:
+        print("1. Predict request received")
           # DELETE OLD HEATMAPS
         for old_file in os.listdir(HEATMAP_FOLDER):
 
@@ -570,6 +571,7 @@ def predict():
         )
 
         file.save(file_path)
+        print("2. Image saved")
 
         # =====================================================
         # STAGE 1
@@ -578,7 +580,7 @@ def predict():
             file_path
         )
 
-        stage1_prediction = stage1_model.predict(
+        stage1_prediction = get_stage1().predict(
             img_stage1
         )[0]
 
@@ -605,7 +607,7 @@ def predict():
             )
 
             generate_gradcam(
-                stage1_model,
+                get_stage1(),
                 img_stage1,
                 file_path,
                 heatmap_path
@@ -653,7 +655,7 @@ def predict():
             )
 
             generate_gradcam(
-                stage1_model,
+                get_stage1(),
                 img_stage1,
                 file_path,
                 heatmap_path
@@ -691,7 +693,7 @@ def predict():
             file_path
         )
 
-        stage2_prediction = stage2_model.predict(
+        stage2_prediction = get_stage2().predict(
             img_stage2
         )[0]
 
@@ -725,7 +727,7 @@ def predict():
         )
 
         generate_gradcam(
-            stage2_model,
+            get_stage2(),
             img_stage2,
             file_path,
             heatmap_path
@@ -770,10 +772,7 @@ def predict():
     
     finally:
 
-        if (
-            file_path and
-            os.path.exists(file_path)
-        ):
+        if file_path is not None and os.path.exists(file_path):
 
             os.remove(file_path)
 # =====================================================
