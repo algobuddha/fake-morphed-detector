@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { classifyImage } from "../services/api";
-import UploadDropzone from "../components/UploadDropzone";
+import UploadDropzone from "../components/UploadDropZone";
 import Button from "../components/Button";
 import ImageMeta from "../components/ImageMeta";
 import Footer from "../components/Footer";
