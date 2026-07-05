@@ -354,17 +354,27 @@ def preprocess_stage2(path):
     if img is None:
         raise ValueError("Invalid image")
 
+    print("P1. Image loaded", flush=True)
+
     img = cv2.cvtColor(
         img,
         cv2.COLOR_BGR2RGB
     )
 
-    faces = get_detector().detect_faces(img)
+    print("P2. Before MTCNN", flush=True)
+
+    detector = get_detector()
+
+    print("P3. MTCNN loaded", flush=True)
+
+    faces = detector.detect_faces(img)
+
+    print("P4. Face detection complete", flush=True)
 
     # Face crop
     if len(faces) > 0:
 
-        x, y, w, h = faces[0]['box']
+        x, y, w, h = faces[0]["box"]
 
         x = max(0, x)
         y = max(0, y)
@@ -374,6 +384,8 @@ def preprocess_stage2(path):
             x:x+w
         ]
 
+    print("P5. Face crop complete", flush=True)
+
     img = cv2.resize(
         img,
         (224,224)
@@ -382,6 +394,8 @@ def preprocess_stage2(path):
     img = preprocess_input(
         img.astype("float32")
     )
+
+    print("P6. Stage 2 preprocessing finished", flush=True)
 
     return np.expand_dims(
         img,
