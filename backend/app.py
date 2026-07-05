@@ -260,16 +260,38 @@ CORS(app)
 # =====================================================
 # LOAD MODELS
 # =====================================================
-stage1_model = load_model("models/stage1_real_fake.keras", compile=False)
+stage1_model = None
+stage2_model = None
 
-stage2_model = load_model(
-    "models/stage2_ai_morphed.keras"
-)
+def get_stage1():
+    global stage1_model
+    if stage1_model is None:
+        stage1_model = load_model(
+            "models/stage1_real_fake.keras",
+            compile=False
+        )
+    return stage1_model
 
+def get_stage2():
+    global stage2_model
+    if stage2_model is None:
+        stage2_model = load_model(
+            "models/stage2_ai_morphed.keras",
+            compile=False
+        )
+    return stage2_model
+stage1_model = get_stage1()
+stage2_model = get_stage2()
 # =====================================================
 # FACE DETECTOR
 # =====================================================
-detector = MTCNN()
+detector = None
+
+def get_detector():
+    global detector
+    if detector is None:
+        detector = MTCNN()
+    return detector
 
 # =====================================================
 # CLASS LABELS
@@ -339,7 +361,7 @@ def preprocess_stage2(path):
         cv2.COLOR_BGR2RGB
     )
 
-    faces = detector.detect_faces(img)
+    faces = get_detector().detect_faces(img)
 
     # Face crop
     if len(faces) > 0:
