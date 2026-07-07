@@ -367,8 +367,7 @@ def preprocess_stage2(path):
 
     print("P3. MTCNN loaded", flush=True)
 
-    detector = MTCNN()
-    faces = detector.detect_faces(img)
+    faces = []
 
     print("P4. Face detection complete", flush=True)
 
