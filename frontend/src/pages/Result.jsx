@@ -155,8 +155,6 @@ export default function Result() {
 
       </main>
 
-      <Footer />
-
     </div>
   );
 }

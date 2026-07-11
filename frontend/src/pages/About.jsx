@@ -4,15 +4,28 @@ import Footer from "../components/Footer";
 
 export default function About() {
   const members = [
-    { name: "Diya Ghosh"/*, role: "Fullstack Developer", info: "Connected frontend and backend, handled routing, and ensured smooth user experience."*/ },
-    { name: "Madhurya Naha"/*, role: "Frontend & UI Designer", info: "Focused on designing responsive layouts and integrating Tailwind CSS with React."*/ },
-    { name: "Aishee Bhattacharjee"/*, role: "Backend & AI Integration", info: "Implemented AI models, API endpoints, and managed the database and server logic."*/ },
-    { name: "Subhajit Basak"/*, role: "Data & Model Specialist", info: "Worked on AI model training, dataset preparation, and accuracy optimization for detection algorithms."*/},
+    {
+      name: "Diya Ghosh",
+      linkedin: "https://linkedin.com/in/diyaa544",
+    },
+    {
+      name: "Madhurya Naha",
+      linkedin: "https://www.linkedin.com/in/madhurya-naha/",
+    },
+    {
+      name: "Aishee Bhattacharjee",
+      linkedin: "https://www.linkedin.com/in/aishee-bhattacharjee-589073253/",
+    },
+    {
+      name: "Subhajit Basak",
+      linkedin: "https://www.linkedin.com/in/subhajit-basak-algobuddha/",
+    },
   ];
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <main className="flex-1 max-w-7xl mx-auto px-4 py-20 sm:py-24 flex flex-col items-center">
+        {/* Heading */}
         <motion.h1
           className="text-4xl md:text-5xl font-bold mb-6 text-center text-indigo-700 dark:text-indigo-400"
           initial={{ opacity: 0, y: -20 }}
@@ -22,46 +35,65 @@ export default function About() {
           About the Project
         </motion.h1>
 
+        {/* Project Description */}
         <motion.p
           className="text-center text-gray-700 dark:text-gray-200 mb-12 max-w-4xl leading-relaxed"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
-          The Fake & Morphed Image Detector is a cutting-edge AI project designed to identify deepfakes, morphed, and altered images instantly. 
-          It leverages state-of-the-art AI models, Grad-CAM visualization, and confidence scoring to ensure reliable detection.
-          <br /><br />
-          This project is academic but demonstrates real-world applications for media verification, digital security, and misinformation prevention.
+          VeriVision- Our Fake & Morphed Image Detector is an AI-powered application
+          developed to identify authentic, AI-generated, and morphed facial
+          images with high accuracy. The system employs a two-stage
+          classification approach along with Grad-CAM visualization and
+          confidence scoring to improve transparency and interpretability of
+          predictions.
+          <br />
+          <br />
+          This project demonstrates the practical application of deep learning
+          in digital image forensics, media verification, and combating visual
+          misinformation.
         </motion.p>
 
+        {/* Team Heading */}
         <motion.h2
-          className="text-3xl font-semibold mb-6 text-center text-indigo-600 dark:text-indigo-400"
+          className="text-3xl font-semibold mb-10 text-center text-indigo-600 dark:text-indigo-400"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-        <br></br>
-        <br></br>
           Team Members
         </motion.h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full">
-          {members.map((m, i) => (
+        {/* Team Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+          {members.map((member, index) => (
             <motion.div
-              key={i}
-              className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow flex flex-col items-center text-center hover:scale-105 transition-transform duration-200"
+              key={index}
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-xl hover:scale-105 transition-all duration-300"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 + i * 0.2, duration: 0.8 }}
+              transition={{
+                delay: 0.6 + index * 0.15,
+                duration: 0.7,
+              }}
             >
-              <h3 className="text-lg font-semibold mb-1">{m.name}</h3>
-              {/* <p className="text-indigo-600 dark:text-indigo-400 mb-2">{m.role}</p> */}
-              {/* <p className="text-gray-700 dark:text-gray-200 text-sm">{m.info}</p> */}
+              <h3 className="text-lg font-semibold mb-2">
+                {member.name}
+              </h3>
+
+              <a
+                href={member.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
+              >
+                View LinkedIn Account
+              </a>
             </motion.div>
           ))}
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

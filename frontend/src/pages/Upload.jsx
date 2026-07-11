@@ -78,7 +78,6 @@ const handleClassify = async () => {
           </Button>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
